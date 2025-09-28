@@ -273,3 +273,17 @@ Planned / In Progress:
 ---
 
 This document is intended to stay in sync with the code and memory log. Update after each build milestone and feature batch.
+
+## Screenshots
+
+### Splash Screen
+![Splash Screen](nf-sp00f-SplashScreen.jpg)
+
+### Dashboard
+![Dashboard Screen](nf-sp00f-DashScreen.jpg)
+
+### Card Reading Interface
+![Read Screen](nf-sp00f-ReadScreen.jpg)
+
+### Emulation Interface
+![Emulation Screen](nf-sp00f-EmuScreen.jpg)
