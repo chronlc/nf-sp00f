@@ -1,0 +1,96 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Android Debug",
+      "type": "shell",
+      "command": "./gradlew",
+      "args": [
+        "assembleDebug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/android-app"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": [
+        "$gradle"
+      ]
+    },
+    {
+      "label": "Install Android App",
+      "type": "shell",
+      "command": "./gradlew",
+      "args": [
+        "installDebug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/android-app"
+      },
+      "group": "build",
+      "dependsOn": "Build Android Debug"
+    },
+    {
+      "label": "Clean Android Build",
+      "type": "shell",
+      "command": "./gradlew",
+      "args": [
+        "clean"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/android-app"
+      },
+      "group": "build"
+    },
+    {
+      "label": "Audit Codebase",
+      "type": "shell",
+      "command": "python3",
+      "args": [
+        "scripts/audit_codebase.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "test"
+    },
+    {
+      "label": "Full Quality Suite",
+      "type": "shell",
+      "command": "python3",
+      "args": [
+        "scripts/audit_codebase.py",
+        "&&",
+        "python3",
+        "scripts/naming_auditor.py",
+        "&&",
+        "python3",
+        "scripts/lint_codebase.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "test"
+    },
+    {
+      "label": "PN532 Terminal Test",
+      "type": "shell",
+      "command": "python3",
+      "args": [
+        "scripts/pn532_terminal.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "test"
+    }
+  ]
+}

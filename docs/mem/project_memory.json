@@ -1,0 +1,75 @@
+{
+  "project_info": {
+    "name": "nf-sp00f33r",
+    "package": "com.nf-sp00f.app",
+    "purpose": "Advanced EMV security research platform for Android 14+",
+    "platform": "Android 14+, Kotlin, Jetpack Compose Material3, Min SDK 28",
+    "github_repo": "https://github.com/chronlc/nf-sp00f",
+    "last_sync": "2025-09-28T00:00:00Z",
+    "build_status": "scaffold_complete"
+  },
+  "technical_stack": {
+    "android_version": "14+",
+    "min_sdk": 28,
+    "language": "Kotlin",
+    "ui_framework": "Jetpack Compose Material3",
+    "nfc": "IsoDep for card reading, HostApduService for HCE",
+    "build_system": "Gradle 8.6",
+    "jdk": "/opt/openjdk-bin-17",
+    "sdk": "/home/user/Android/Sdk"
+  },
+  "architecture": {
+    "data_models": [
+      "EmvCardData",
+      "ApduLogEntry",
+      "CardProfile"
+    ],
+    "core_modules": {
+      "cardreading": "NfcCardReaderWithWorkflows, EmvTlvParser",
+      "emulation": "EmvAttackEmulationManager, EmulationProfiles",
+      "ui": "5 Compose fragments (Dashboard, CardReading, Emulation, CardDatabase, Analysis)",
+      "data": "CardProfileManager singleton with CRUD operations",
+      "utils": "Hex/TLV helpers, BER-TLV parsing",
+      "hardware": "PN532 adapters for external hardware"
+    },
+    "communication": "ByteArray for all APDU communications",
+    "parsing": "Dynamic PDOL/CDOL construction from BER-TLV"
+  },
+  "emv_features": {
+    "workflows": 6,
+    "attack_profiles": 5,
+    "emv_tags_supported": "70+",
+    "attack_types": [
+      "PPSE Poisoning",
+      "AIP Force Offline",
+      "Track2 Spoofing",
+      "Cryptogram Downgrade",
+      "CVM Bypass"
+    ]
+  },
+  "development_rules": {
+    "file_corruption_protocol": "DELETE→REGENERATE",
+    "no_safe_call_operators": true,
+    "batch_operations": true,
+    "build_requirement": "BUILD SUCCESSFUL for task completion",
+    "code_quality": "production-grade only, no placeholders",
+    "naming_conventions": "PascalCase classes, camelCase methods"
+  },
+  "current_status": {
+    "completed": [
+      "Android scaffold created",
+      "Git repository initialized",
+      "GitHub remote configured and pushed",
+      "Project structure planning"
+    ],
+    "in_progress": [
+      "Project structure setup",
+      "Memory system initialization"
+    ],
+    "next_steps": [
+      "Create automation scripts",
+      "Implement EMV data models",
+      "Build NFC card reading engine"
+    ]
+  }
+}
