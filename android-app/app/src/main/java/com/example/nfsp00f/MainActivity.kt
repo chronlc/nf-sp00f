@@ -3,11 +3,16 @@ package com.example.nfsp00f
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -17,10 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -138,9 +147,30 @@ fun NfSp00fApp() {
                     items.forEachIndexed { index, (label, icon) ->
                         NavigationBarItem(
                                 icon = {
-                                    Icon(icon, contentDescription = label, tint = Color(0xFF4CAF50))
+                                    Icon(
+                                            icon,
+                                            contentDescription = label,
+                                            tint =
+                                                    if (selectedTab == index) Color(0xFF4CAF50)
+                                                    else Color(0xFF4CAF50).copy(alpha = 0.6f),
+                                            modifier =
+                                                    Modifier.then(
+                                                            if (selectedTab == index) Modifier
+                                                            else Modifier
+                                                    )
+                                    )
                                 },
-                                label = { Text(label, color = Color(0xFF4CAF50)) },
+                                label = {
+                                    Text(
+                                            label,
+                                            color =
+                                                    if (selectedTab == index) Color(0xFF4CAF50)
+                                                    else Color(0xFF4CAF50).copy(alpha = 0.6f),
+                                            fontWeight =
+                                                    if (selectedTab == index) FontWeight.Bold
+                                                    else FontWeight.Normal
+                                    )
+                                },
                                 selected = selectedTab == index,
                                 onClick = { selectedTab = index },
                                 colors =
@@ -152,7 +182,7 @@ fun NfSp00fApp() {
                                                 unselectedTextColor =
                                                         Color(0xFF4CAF50).copy(alpha = 0.6f),
                                                 indicatorColor =
-                                                        Color(0xFF4CAF50).copy(alpha = 0.2f)
+                                                        Color.Transparent // Remove green oval
                                         )
                         )
                     }
@@ -414,30 +444,461 @@ fun VirtualCardView(card: VirtualCard) {
     }
 }
 
+// Device connection states
+enum class DeviceState {
+    NOT_SELECTED,
+    CONNECTING,
+    CONNECTED,
+    ERROR
+}
+
+// NFC Device types
+enum class NfcDevice(val displayName: String) {
+    INTERNAL("Internal NFC"),
+    PN532_BLUETOOTH("PN532 BLUETOOTH"),
+    PN532_USB("PN532 USB")
+}
+
+// APDU Log Entry for live traffic
+data class ApduLogEntry(
+        val timestamp: String,
+        val direction: String, // "→" or "←"
+        val command: String,
+        val data: String,
+        val statusWord: String = "",
+        val parsed: String = ""
+)
+
 @Composable
 fun CardReadingScreen() {
+    var selectedDevice by remember { mutableStateOf<NfcDevice?>(null) }
+    var deviceState by remember { mutableStateOf(DeviceState.NOT_SELECTED) }
+    var deviceStatusText by remember { mutableStateOf("No Device Selected") }
+
+    // Checkboxes state
+    var singleCard by remember { mutableStateOf(true) }
+    var multiCard by remember { mutableStateOf(false) }
+    var stealth by remember { mutableStateOf(false) }
+    var emvDump by remember { mutableStateOf(false) }
+
+    // Reading state
+    var isReading by remember { mutableStateOf(false) }
+
+    // Card data
+    var readCard by remember { mutableStateOf<VirtualCard?>(null) }
+
+    // APDU traffic
+    var apduLog by remember { mutableStateOf(listOf<ApduLogEntry>()) }
+
     Column(
+            modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Icon(
-                Icons.Default.Nfc,
-                contentDescription = null,
-                modifier = Modifier.size(64.dp),
-                tint = Color(0xFF4CAF50)
-        )
+        // Header - RoGuE TeRMiNAL
         Text(
-                "NFC Card Reader",
-                style = MaterialTheme.typography.headlineMedium,
+                "RoGuE TeRMiNAL",
+                style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF4CAF50)
+                color = Color(0xFF4CAF50),
+                textAlign = TextAlign.Center,
+                letterSpacing = 2.sp
+        )
+
+        // Device Selection Row
+        Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                    "NFC Device:",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color(0xFF4CAF50)
+            )
+
+            // Dropdown Menu
+            var expanded by remember { mutableStateOf(false) }
+
+            Box {
+                OutlinedButton(
+                        onClick = { expanded = true },
+                        colors =
+                                ButtonDefaults.outlinedButtonColors(
+                                        contentColor = Color(0xFF4CAF50)
+                                ),
+                        border = BorderStroke(1.dp, Color(0xFF4CAF50)),
+                        modifier = Modifier.width(200.dp)
+                ) {
+                    Text(selectedDevice?.displayName ?: "Select Device", color = Color(0xFF4CAF50))
+                    Icon(
+                            Icons.Default.ArrowDropDown,
+                            contentDescription = "Dropdown",
+                            tint = Color(0xFF4CAF50)
+                    )
+                }
+
+                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                    NfcDevice.values().forEach { device ->
+                        DropdownMenuItem(
+                                text = { Text(device.displayName, color = Color(0xFF4CAF50)) },
+                                onClick = {
+                                    selectedDevice = device
+                                    expanded = false
+                                    // Simulate connection attempt
+                                    deviceState = DeviceState.CONNECTING
+                                    deviceStatusText = "Connecting to ${device.displayName}..."
+
+                                    // Simulate connection success after delay
+                                    kotlinx.coroutines.GlobalScope.launch {
+                                        kotlinx.coroutines.delay(2000)
+                                        deviceState = DeviceState.CONNECTED
+                                        deviceStatusText = "${device.displayName} Connected"
+                                    }
+                                }
+                        )
+                    }
+                }
+            }
+        }
+
+        // Device Status
+        Text(
+                deviceStatusText,
+                style = MaterialTheme.typography.bodyLarge,
+                color =
+                        when (deviceState) {
+                            DeviceState.CONNECTED -> Color(0xFF4CAF50)
+                            DeviceState.CONNECTING -> Color(0xFFFF9800)
+                            DeviceState.ERROR -> Color(0xFFCF1B33)
+                            DeviceState.NOT_SELECTED -> Color(0xFF4CAF50).copy(alpha = 0.7f)
+                        },
+                fontWeight = FontWeight.Medium
+        )
+
+        // Reading Options Checkboxes - Smaller and Compact
+        Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
+                shape = RoundedCornerShape(8.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Column(
+                    modifier = Modifier.padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                        "Reading Options",
+                        style =
+                                MaterialTheme.typography.titleMedium.copy(
+                                        textDecoration =
+                                                androidx.compose.ui.text.style.TextDecoration
+                                                        .Underline
+                                ),
+                        color = Color(0xFF4CAF50),
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                )
+
+                // First row: Single Card and Multi Card
+                Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    CheckboxRow("Single Card", singleCard, Modifier.weight(1f)) {
+                        singleCard = it
+                        if (it) multiCard = false
+                    }
+                    CheckboxRow("Multi Card", multiCard, Modifier.weight(1f)) {
+                        multiCard = it
+                        if (it) singleCard = false
+                    }
+                }
+
+                // Second row: Stealth and EMV Dump
+                Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    CheckboxRow("Stealth", stealth, Modifier.weight(1f)) { stealth = it }
+                    CheckboxRow("EMV Dump", emvDump, Modifier.weight(1f)) { emvDump = it }
+                }
+            }
+        }
+
+        // Control Buttons
+        Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Button(
+                    onClick = {
+                        if (deviceState == DeviceState.CONNECTED) {
+                            isReading = true
+                            // Simulate card reading
+                            simulateCardRead { card ->
+                                readCard = card
+                                isReading = false
+                            }
+                        }
+                    },
+                    enabled = deviceState == DeviceState.CONNECTED && !isReading,
+                    colors =
+                            ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFF4CAF50),
+                                    contentColor = Color.Black
+                            ),
+                    modifier = Modifier.weight(1f)
+            ) {
+                if (isReading) {
+                    CircularProgressIndicator(
+                            modifier = Modifier.size(16.dp),
+                            color = Color.Black,
+                            strokeWidth = 2.dp
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                Text("Read Card(s)")
+            }
+
+            Button(
+                    onClick = {
+                        isReading = false
+                        readCard = null
+                        apduLog = emptyList()
+                    },
+                    enabled = isReading,
+                    colors =
+                            ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFCF1B33),
+                                    contentColor = Color.White
+                            ),
+                    modifier = Modifier.weight(1f)
+            ) { Text("Stop") }
+        }
+
+        // Virtual Card Display - Smaller Width
+        if (readCard != null) {
+            Card(
+                    modifier = Modifier.fillMaxWidth(0.85f), // Shrink to 85% width
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF2E2E2E)),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    // Subtle background
+                    Image(
+                            painter = painterResource(id = R.drawable.nfspoof_logo),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxWidth().height(120.dp),
+                            alpha = 0.1f
+                    )
+
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                    "${readCard!!.apduCount} APDUs",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Color(0xFF4CAF50),
+                                    fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                    readCard!!.cardType,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Color(0xFF4CAF50),
+                                    fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                                readCard!!.cardholderName,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color(0xFF4CAF50),
+                                fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                                readCard!!.pan,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color(0xFF4CAF50)
+                        )
+                        Text(
+                                readCard!!.expiry,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color(0xFF4CAF50)
+                        )
+                    }
+                }
+            }
+        } else {
+            // Blank card placeholder - Smaller Width
+            Card(
+                    modifier = Modifier.fillMaxWidth(0.85f), // Shrink to 85% width
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Box(
+                        modifier = Modifier.fillMaxWidth().height(120.dp),
+                        contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                            "No Card Read",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color(0xFF4CAF50).copy(alpha = 0.6f)
+                    )
+                }
+            }
+        }
+
+        // Live APDU Traffic
+        Card(
+                modifier = Modifier.fillMaxWidth().height(300.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.Black),
+                shape = RoundedCornerShape(8.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                        "Live APDU Traffic",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color(0xFF4CAF50),
+                        fontWeight = FontWeight.Bold
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    items(apduLog) { entry -> ApduLogItem(entry) }
+
+                    if (apduLog.isEmpty()) {
+                        item {
+                            Text(
+                                    "Waiting for APDU traffic...",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = Color(0xFF4CAF50).copy(alpha = 0.6f),
+                                    fontFamily = FontFamily.Monospace
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CheckboxRow(
+        label: String,
+        checked: Boolean,
+        modifier: Modifier = Modifier,
+        onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Checkbox(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                colors =
+                        CheckboxDefaults.colors(
+                                checkedColor = Color(0xFF4CAF50),
+                                uncheckedColor = Color(0xFF4CAF50),
+                                checkmarkColor = Color.Black
+                        ),
+                modifier = Modifier.size(18.dp)
         )
         Text(
-                "Ready to read EMV cards",
-                style = MaterialTheme.typography.bodyLarge,
+                label,
+                style = MaterialTheme.typography.labelLarge.copy(fontSize = 13.sp),
                 color = Color(0xFF4CAF50)
         )
+    }
+}
+
+@Composable
+fun ApduLogItem(entry: ApduLogEntry) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                    entry.timestamp,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFF4CAF50).copy(alpha = 0.7f),
+                    fontFamily = FontFamily.Monospace
+            )
+            Text(
+                    entry.direction,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = if (entry.direction == "→") Color(0xFF4CAF50) else Color(0xFFFF9800),
+                    fontFamily = FontFamily.Monospace
+            )
+            Text(
+                    entry.command,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color(0xFF4CAF50),
+                    fontFamily = FontFamily.Monospace
+            )
+        }
+
+        if (entry.data.isNotEmpty()) {
+            Text(
+                    "Data: ${entry.data}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFF4CAF50).copy(alpha = 0.8f),
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.padding(start = 16.dp)
+            )
+        }
+
+        if (entry.statusWord.isNotEmpty()) {
+            Text(
+                    "SW: ${entry.statusWord}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFF4CAF50).copy(alpha = 0.8f),
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.padding(start = 16.dp)
+            )
+        }
+
+        if (entry.parsed.isNotEmpty()) {
+            Text(
+                    "→ ${entry.parsed}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFFFF9800),
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.padding(start = 16.dp)
+            )
+        }
+    }
+}
+
+// Simulate card reading function
+fun simulateCardRead(onCardRead: (VirtualCard) -> Unit) {
+    kotlinx.coroutines.GlobalScope.launch {
+        kotlinx.coroutines.delay(3000) // Simulate reading time
+        val simulatedCard =
+                VirtualCard(
+                        cardholderName = "JOHN DOE",
+                        pan = "4154 **** **** 3556",
+                        expiry = "02/29",
+                        apduCount = 47,
+                        cardType = "VISA"
+                )
+        onCardRead(simulatedCard)
     }
 }
 
