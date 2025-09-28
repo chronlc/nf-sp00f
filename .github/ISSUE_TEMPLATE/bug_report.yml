@@ -1,0 +1,90 @@
+name: Bug Report
+description: Report a bug in nf-sp00f33r
+title: "[BUG] "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐛 Bug Report for nf-sp00f33r
+        Thanks for taking the time to report a bug! Please fill out the information below.
+        
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: Describe the bug...
+    validations:
+      required: true
+      
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Open the app
+        2. Navigate to...
+        3. Tap on...
+        4. See error
+    validations:
+      required: true
+      
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+      placeholder: Expected behavior...
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component Affected
+      description: Which part of the app is affected?
+      options:
+        - NFC Card Reading
+        - HCE Emulation
+        - Attack Modules
+        - UI/Material3
+        - APDU Processing
+        - Database/Storage
+        - PN532 Hardware
+        - Other
+    validations:
+      required: true
+      
+  - type: textarea
+    id: device-info
+    attributes:
+      label: Device Information
+      description: Tell us about your device
+      placeholder: |
+        - Device: (e.g. Pixel 7, OnePlus 9)
+        - Android Version: (e.g. Android 14)
+        - NFC Enabled: Yes/No
+        - App Version: (from About screen)
+    validations:
+      required: true
+      
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logcat/Error Logs
+      description: If applicable, add logcat output or error messages
+      placeholder: Paste logcat output here...
+      render: shell
+      
+  - type: checkboxes
+    id: research-context
+    attributes:
+      label: Research Context
+      description: Please confirm the following
+      options:
+        - label: This is for legitimate security research/educational purposes
+          required: true
+        - label: I have reviewed the app's responsible use guidelines
+          required: true

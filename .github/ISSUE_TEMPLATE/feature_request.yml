@@ -1,0 +1,89 @@
+name: Feature Request
+description: Suggest a new feature for nf-sp00f33r
+title: "[FEATURE] "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ✨ Feature Request for nf-sp00f33r
+        Thanks for suggesting a new feature! Please provide details below.
+        
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: A clear description of what you want to happen
+      placeholder: Describe the feature...
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      description: Which area does this feature belong to?
+      options:
+        - EMV Attack Module
+        - Card Reading Enhancement
+        - HCE Emulation
+        - UI/UX Improvement
+        - Hardware Integration (PN532)
+        - Analysis Tools
+        - Security Enhancement
+        - Performance Optimization
+        - Documentation
+        - Other
+    validations:
+      required: true
+      
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Describe the security research or educational use case
+      placeholder: |
+        What security research scenario would this feature support?
+        How would this help with EMV analysis or education?
+    validations:
+      required: true
+      
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How do you think this should be implemented?
+      placeholder: Describe your proposed solution...
+      
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Alternative solutions you've considered
+      placeholder: Describe alternatives...
+      
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature?
+      options:
+        - Low - Nice to have
+        - Medium - Would improve workflow
+        - High - Important for research
+        - Critical - Blocking research
+    validations:
+      required: true
+      
+  - type: checkboxes
+    id: research-ethics
+    attributes:
+      label: Research Ethics
+      description: Please confirm the following
+      options:
+        - label: This feature is for legitimate security research/educational purposes
+          required: true
+        - label: This feature follows responsible disclosure principles
+          required: true
+        - label: This feature will not facilitate malicious activities
+          required: true
