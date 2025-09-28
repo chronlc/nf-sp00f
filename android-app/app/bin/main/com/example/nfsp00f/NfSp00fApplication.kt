@@ -1,0 +1,60 @@
+package com.example.nfsp00f
+
+import android.app.Application
+import android.content.Context
+import com.example.nfsp00f.manager.CardProfileManager
+import java.io.File
+
+/**
+ * Main Application class for nf-sp00f EMV Security Platform Initializes core managers and services
+ */
+class NfSp00fApplication : Application() {
+
+  override fun onCreate() {
+    super.onCreate()
+
+    // Initialize CardProfileManager with storage directory
+    val storageDir = File(applicationContext.filesDir, "card_profiles")
+    CardProfileManager.getInstance().initialize(storageDir)
+
+    // Initialize other managers and services here as needed
+    initializeLogging()
+    initializeErrorHandling()
+  }
+
+  private fun initializeLogging() {
+    // Configure logging for debug/release builds
+    // This could integrate with Timber or other logging frameworks
+  }
+
+  private fun initializeErrorHandling() {
+    // Set up global error handling and crash reporting
+    Thread.setDefaultUncaughtExceptionHandler { thread, exception ->
+      android.util.Log.e(
+              "NfSp00fApplication",
+              "Uncaught exception in thread ${thread.name}",
+              exception
+      )
+
+      // In a production app, you might send crash reports here
+      // For now, we'll just log and continue
+    }
+  }
+
+  companion object {
+    /** Get application context from anywhere */
+    fun getContext(): Context? {
+      return instance?.applicationContext
+    }
+
+    private var instance: NfSp00fApplication? = null
+
+    init {
+      // This will be called when the class is first loaded
+    }
+  }
+
+  init {
+    instance = this
+  }
+}

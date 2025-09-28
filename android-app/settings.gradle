@@ -1,17 +1,2 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-    }
-}
-
-dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
 rootProject.name = 'nf-sp00f33r'
 include ':app'
