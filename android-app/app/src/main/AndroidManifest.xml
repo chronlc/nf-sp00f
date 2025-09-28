@@ -11,16 +11,26 @@
     <application
         android:name=".NfSp00fApplication"
         android:allowBackup="true"
-        android:label="nf-sp00f33r"
+        android:icon="@drawable/nfspoof_logo"
+        android:label="nf-sp00f"
         android:supportsRtl="true">
 
-        <activity android:name=".MainActivity"
-            android:exported="true">
+        <!-- Splash Activity as Launcher -->
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Main Activity -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
 
         <!-- HCE Service for EMV emulation -->
         <service

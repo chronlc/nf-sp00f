@@ -8,7 +8,7 @@ body:
       value: |
         ## ✨ Feature Request for nf-sp00f33r
         Thanks for suggesting a new feature! Please provide details below.
-        
+
   - type: textarea
     id: feature-description
     attributes:
@@ -17,7 +17,7 @@ body:
       placeholder: Describe the feature...
     validations:
       required: true
-      
+
   - type: dropdown
     id: category
     attributes:
@@ -36,7 +36,7 @@ body:
         - Other
     validations:
       required: true
-      
+
   - type: textarea
     id: use-case
     attributes:
@@ -47,21 +47,21 @@ body:
         How would this help with EMV analysis or education?
     validations:
       required: true
-      
+
   - type: textarea
     id: solution
     attributes:
       label: Proposed Solution
       description: How do you think this should be implemented?
       placeholder: Describe your proposed solution...
-      
+
   - type: textarea
     id: alternatives
     attributes:
       label: Alternatives Considered
       description: Alternative solutions you've considered
       placeholder: Describe alternatives...
-      
+
   - type: dropdown
     id: priority
     attributes:
@@ -74,7 +74,7 @@ body:
         - Critical - Blocking research
     validations:
       required: true
-      
+
   - type: checkboxes
     id: research-ethics
     attributes:

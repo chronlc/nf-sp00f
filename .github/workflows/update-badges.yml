@@ -10,28 +10,28 @@ jobs:
   update-readme:
     runs-on: ubuntu-latest
     if: github.event.workflow_run.head_branch == 'master'
-    
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Update README with badges
-      run: |
-        # Create badges section if it doesn't exist
-        if ! grep -q "Build Status" README.md; then
-          sed -i '2i\\n[![Build Status](https://github.com/chronlc/nf-sp00f/workflows/Android%20CI%2FCD/badge.svg)](https://github.com/chronlc/nf-sp00f/actions)\n[![Release](https://img.shields.io/github/v/release/chronlc/nf-sp00f?color=green)](https://github.com/chronlc/nf-sp00f/releases)\n[![Android](https://img.shields.io/badge/Android-14%2B-green?logo=android)](https://developer.android.com)\n[![Material3](https://img.shields.io/badge/Material3-Dark-blue?logo=material-design)](https://m3.material.io)\n[![NFC](https://img.shields.io/badge/NFC-EMV-orange?logo=nfc)](https://developer.android.com/guide/topics/connectivity/nfc)\n' README.md
-        fi
-        
-    - name: Commit badge updates
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        if git diff --quiet; then
-          echo "No changes to commit"
-        else
-          git add README.md
-          git commit -m "Update CI badges [skip ci]"
-          git push
-        fi
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update README with badges
+        run: |
+          # Create badges section if it doesn't exist
+          if ! grep -q "Build Status" README.md; then
+            sed -i '2i\\n[![Build Status](https://github.com/chronlc/nf-sp00f/workflows/Android%20CI%2FCD/badge.svg)](https://github.com/chronlc/nf-sp00f/actions)\n[![Release](https://img.shields.io/github/v/release/chronlc/nf-sp00f?color=green)](https://github.com/chronlc/nf-sp00f/releases)\n[![Android](https://img.shields.io/badge/Android-14%2B-green?logo=android)](https://developer.android.com)\n[![Material3](https://img.shields.io/badge/Material3-Dark-blue?logo=material-design)](https://m3.material.io)\n[![NFC](https://img.shields.io/badge/NFC-EMV-orange?logo=nfc)](https://developer.android.com/guide/topics/connectivity/nfc)\n' README.md
+          fi
+
+      - name: Commit badge updates
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          if git diff --quiet; then
+            echo "No changes to commit"
+          else
+            git add README.md
+            git commit -m "Update CI badges [skip ci]"
+            git push
+          fi
