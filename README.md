@@ -1,3 +1,5 @@
+![nf-sp00f33r](nfspoof3.png)
+
 # nf-sp00f33r – Program Features and Architecture
 
 This document provides a complete, high-level and deep-dive overview of the nf-sp00f33r Android EMV research app: architecture, modules, data models, workflows, APDU parsing, HCE/emulation attack surface, UI, storage, automation scripts, and roadmap. It reflects the current codebase and the intended final design from project memory and docs.
@@ -84,7 +86,7 @@ This document provides a complete, high-level and deep-dive overview of the nf-s
 
 ### 4.1 High-level flow
 1) Enable reader mode in MainActivity (Android switches HCE vs Reader automatically)
-- GREAT REFERENCE FOR FLOW IS IN THIS REPO https://github.com/RfidResearchGroup/proxmark3.git the emv scan command grabs the full emv dump (REFERENCE THIS ALSO ADD IN THE EMV ROCA AND IMPLEMENT THAT IN OUR APP)  
+- GREAT REFERENCE FOR FLOW IS IN THIS REPO https://github.com/RfidResearchGroup/proxmark3.git the emv scan command grabs the full emv dump (REFERENCE THIS ALSO ADD IN THE EMV ROCA AND IMPLEMENT THAT IN OUR APP)
 2) Card detected → onTagDiscovered → connect IsoDep
 3) Workflow execution via NfcCardReaderWithWorkflows
    - SELECT PPSE (2PAY.SYS.DDF01) → parse AID directory
