@@ -542,7 +542,7 @@ fun CardReadingScreen() {
         ) {
             Text(
                     "NFC Device:",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = Color(0xFF4CAF50)
             )
 
@@ -559,7 +559,12 @@ fun CardReadingScreen() {
                         border = BorderStroke(1.dp, Color(0xFF4CAF50)),
                         modifier = Modifier.width(200.dp)
                 ) {
-                    Text(selectedDevice?.displayName ?: "Select Device", color = Color(0xFF4CAF50))
+                    Text(
+                            selectedDevice?.displayName ?: "No Device Selected",
+                            color =
+                                    if (selectedDevice == null) Color(0xFFFFFFFF)
+                                    else Color(0xFF4CAF50)
+                    )
                     Icon(
                             Icons.Default.ArrowDropDown,
                             contentDescription = "Dropdown",
@@ -605,10 +610,13 @@ fun CardReadingScreen() {
                 fontWeight = FontWeight.Medium
         )
 
-        // Reading Options Checkboxes - Smaller and Compact
+        // Reading Options Checkboxes - Dashboard Style
         Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
+                colors =
+                        CardDefaults.cardColors(
+                                containerColor = Color(0xFF121717)
+                        ), // Same as dashboard
                 shape = RoundedCornerShape(8.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
@@ -707,81 +715,104 @@ fun CardReadingScreen() {
             ) { Text("Stop") }
         }
 
-        // Virtual Card Display - Smaller Width
+        // Virtual Card Display - Dashboard Style
         if (readCard != null) {
             Card(
-                    modifier = Modifier.fillMaxWidth(0.85f), // Shrink to 85% width
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFF2E2E2E)),
+                    modifier = Modifier.fillMaxWidth(0.75f).height(120.dp), // Smaller width
+                    colors =
+                            CardDefaults.cardColors(
+                                    containerColor = Color(0xFF121717)
+                            ), // Same dark background
                     shape = RoundedCornerShape(8.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    // Subtle background
+                Box(modifier = Modifier.fillMaxSize()) {
+                    // Subtle background - same as dashboard
                     Image(
                             painter = painterResource(id = R.drawable.nfspoof_logo),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxWidth().height(120.dp),
+                            modifier = Modifier.fillMaxSize(),
                             alpha = 0.1f
                     )
 
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
+                    Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                        // APDU count in upper left (same as dashboard)
+                        Text(
+                                "${readCard!!.apduCount} APDUs",
+                                style =
+                                        MaterialTheme.typography.labelSmall.copy(
+                                                fontWeight = FontWeight.Bold
+                                        ),
+                                color = Color(0xFF4a4f54), // Gray like dashboard
+                                modifier = Modifier.align(Alignment.TopStart)
+                        )
+
+                        // Card brand in upper right (same as dashboard)
+                        Text(
+                                readCard!!.cardType,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFFFFFFF), // White like dashboard
+                                modifier = Modifier.align(Alignment.TopEnd)
+                        )
+
+                        // Cardholder info in bottom left corner (same as dashboard)
+                        Column(modifier = Modifier.align(Alignment.BottomStart)) {
                             Text(
-                                    "${readCard!!.apduCount} APDUs",
+                                    readCard!!.cardholderName,
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = Color(0xFF4CAF50),
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFFFFFFFF) // White like dashboard
                             )
                             Text(
-                                    readCard!!.cardType,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = Color(0xFF4CAF50),
-                                    fontWeight = FontWeight.Bold
+                                    readCard!!.pan,
+                                    style =
+                                            MaterialTheme.typography.labelSmall.copy(
+                                                    fontWeight = FontWeight.Bold
+                                            ),
+                                    color = Color(0xFF4CAF50) // Green like dashboard
+                            )
+                            Text(
+                                    readCard!!.expiry,
+                                    style =
+                                            MaterialTheme.typography.labelSmall.copy(
+                                                    fontWeight = FontWeight.Bold
+                                            ),
+                                    color = Color(0xFF4a4f54) // Gray like dashboard
                             )
                         }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-                                readCard!!.cardholderName,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = Color(0xFF4CAF50),
-                                fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                                readCard!!.pan,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color(0xFF4CAF50)
-                        )
-                        Text(
-                                readCard!!.expiry,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color(0xFF4CAF50)
-                        )
                     }
                 }
             }
         } else {
-            // Blank card placeholder - Smaller Width
+            // Blank card placeholder - Dashboard Style
             Card(
-                    modifier = Modifier.fillMaxWidth(0.85f), // Shrink to 85% width
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)),
+                    modifier = Modifier.fillMaxWidth(0.75f).height(120.dp), // Smaller width
+                    colors =
+                            CardDefaults.cardColors(
+                                    containerColor = Color(0xFF121717)
+                            ), // Same dark background
                     shape = RoundedCornerShape(8.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Box(
-                        modifier = Modifier.fillMaxWidth().height(120.dp),
-                        contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                            "No Card Read",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = Color(0xFF4CAF50).copy(alpha = 0.6f)
+                Box(modifier = Modifier.fillMaxSize()) {
+                    // Add background image like dashboard cards
+                    Image(
+                            painter = painterResource(id = R.drawable.nfspoof_logo),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize(),
+                            alpha = 0.1f
                     )
+
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                                "No Card Read",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color(0xFF4CAF50).copy(alpha = 0.6f)
+                        )
+                    }
                 }
             }
         }
