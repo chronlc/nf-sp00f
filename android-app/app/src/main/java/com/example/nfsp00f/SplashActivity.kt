@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -84,11 +85,11 @@ fun SplashScreen() {
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(32.dp).alpha(fadeInAnimation.value)
     ) {
-      // Main title - Headlines: Roboto Medium 24sp
+      // Main title - Headlines: Roboto Bold 30sp
       Text(
               text = "nf-sp00f",
-              fontSize = 24.sp,
-              fontWeight = FontWeight.Medium,
+              fontSize = 30.sp,
+              fontWeight = FontWeight.Bold,
               fontFamily = FontFamily.Default, // Roboto is default on Android
               color = Color(0xFF4CAF50),
               textAlign = TextAlign.Center,
@@ -97,11 +98,11 @@ fun SplashScreen() {
 
       Spacer(modifier = Modifier.height(16.dp))
 
-      // Subtitle - Titles: Roboto Regular 18sp
+      // Subtitle - Titles: Roboto Bold 22sp
       Text(
               text = "NFC PhreaK BoX",
-              fontSize = 18.sp,
-              fontWeight = FontWeight.Normal,
+              fontSize = 22.sp,
+              fontWeight = FontWeight.Bold,
               fontFamily = FontFamily.Default,
               color = Color(0xFF4CAF50),
               textAlign = TextAlign.Center,
@@ -116,9 +117,10 @@ fun SplashScreen() {
               fontSize = 16.sp,
               fontWeight = FontWeight.Normal,
               fontFamily = FontFamily.Default,
-              color = Color(0xFF4CAF50).copy(alpha = 0.8f),
+              color = Color(0xFFFFFFFF), // White color
               textAlign = TextAlign.Center,
-              letterSpacing = 0.15.sp
+              letterSpacing = 0.15.sp,
+              textDecoration = TextDecoration.Underline
       )
 
       Spacer(modifier = Modifier.height(32.dp))
