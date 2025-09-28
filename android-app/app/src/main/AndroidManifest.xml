@@ -1,10 +1,19 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.nfsp00f">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- NFC Permissions for EMV card reading -->
+    <uses-permission android:name="android.permission.NFC" />
+
+    <!-- Required for NFC functionality -->
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
 
     <application
+        android:name=".NfSp00fApplication"
         android:allowBackup="true"
-        android:label="nf-sp00f"
+        android:label="nf-sp00f33r"
         android:supportsRtl="true">
+
         <activity android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -12,6 +21,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- HCE Service for EMV emulation -->
+        <service
+            android:name=".emulation.EnhancedHceService"
+            android:exported="true"
+            android:permission="android.permission.BIND_NFC_SERVICE">
+            <intent-filter>
+                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
