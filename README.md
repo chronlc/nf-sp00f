@@ -277,13 +277,13 @@ This document is intended to stay in sync with the code and memory log. Update a
 ## Screenshots
 
 ### Splash Screen
-![Splash Screen](nf-sp00f-SplashScreen.jpg)
+![Splash Screen](./nf-sp00f-SplashScreen.jpg)
 
 ### Dashboard
-![Dashboard Screen](nf-sp00f-DashScreen.jpg)
+![Dashboard Screen](./nf-sp00f-DashScreen.jpg)
 
 ### Card Reading Interface
-![Read Screen](nf-sp00f-ReadScreen.jpg)
+![Read Screen](./nf-sp00f-ReadScreen.jpg)
 
 ### Emulation Interface
-![Emulation Screen](nf-sp00f-EmuScreen.jpg)
+![Emulation Screen](./nf-sp00f-EmuScreen.jpg)
