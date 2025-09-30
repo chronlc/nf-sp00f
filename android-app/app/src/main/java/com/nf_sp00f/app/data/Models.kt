@@ -1,4 +1,4 @@
-package com.example.nfsp00f.data
+package com.nf_sp00f.app.data
 
 data class VirtualCard(
         val cardholderName: String,
@@ -10,17 +10,17 @@ data class VirtualCard(
 
 // Device connection states
 enum class DeviceState {
-  NOT_SELECTED,
-  CONNECTING,
-  CONNECTED,
-  ERROR
+        NOT_SELECTED,
+        CONNECTING,
+        CONNECTED,
+        ERROR
 }
 
 // NFC Device types
 enum class NfcDevice(val displayName: String) {
-  INTERNAL("Internal NFC"),
-  PN532_BLUETOOTH("PN532 BLUETOOTH"),
-  PN532_USB("PN532 USB")
+        INTERNAL("Internal NFC"),
+        PN532_BLUETOOTH("PN532 BLUETOOTH"),
+        PN532_USB("PN532 USB")
 }
 
 // Note: ApduLogEntry is defined in ApduLogEntry.kt

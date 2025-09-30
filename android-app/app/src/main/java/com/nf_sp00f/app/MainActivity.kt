@@ -14,17 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.nfsp00f.ui.theme.nfSp00fTheme
-import com.example.nfsp00f.ui.screens.*
+import com.nf_sp00f.app.ui.screens.*
+import com.nf_sp00f.app.ui.theme.nfSp00fTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { 
-            nfSp00fTheme { 
-                nfSp00fApp() 
-            } 
-        }
+        setContent { nfSp00fTheme { nfSp00fApp() } }
     }
 }
 
