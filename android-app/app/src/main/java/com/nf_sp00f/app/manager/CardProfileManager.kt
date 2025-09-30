@@ -1,9 +1,9 @@
-package com.example.nfsp00f.manager
+package com.nf_sp00f.app.manager
 
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.example.nfsp00f.data.*
+import com.nf_sp00f.app.data.*
 import kotlinx.coroutines.flow.*
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap

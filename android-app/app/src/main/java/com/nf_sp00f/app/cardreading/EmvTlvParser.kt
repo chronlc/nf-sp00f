@@ -1,4 +1,4 @@
-package com.example.nfsp00f.cardreading
+package com.nf_sp00f.app.cardreading
 
 /**
  * Production-grade EMV TLV Parser Implements RFIDIOt/Proxmark3-style BER-TLV parsing with

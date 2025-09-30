@@ -1,4 +1,4 @@
-package com.example.nfsp00f
+package com.nf_sp00f.app
 
 import android.app.Application
 import android.content.Context

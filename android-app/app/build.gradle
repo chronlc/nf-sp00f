@@ -5,10 +5,10 @@ plugins {
 
 android {
     compileSdk 34
-    namespace "com.example.nfsp00f"
+    namespace "com.nf_sp00f.app"
 
     defaultConfig {
-        applicationId "com.example.nfsp00f"
+        applicationId "com.nf_sp00f.app"
         minSdk 28
         targetSdk 34
         versionCode 1

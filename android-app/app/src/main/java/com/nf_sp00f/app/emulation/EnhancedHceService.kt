@@ -1,9 +1,9 @@
-package com.example.nfsp00f.emulation
+package com.nf_sp00f.app.emulation
 
 import android.nfc.cardemulation.HostApduService
 import android.os.Bundle
 import android.util.Log
-import com.example.nfsp00f.data.ApduLogEntry
+import com.nf_sp00f.app.data.ApduLogEntry
 import java.util.*
 
 /**

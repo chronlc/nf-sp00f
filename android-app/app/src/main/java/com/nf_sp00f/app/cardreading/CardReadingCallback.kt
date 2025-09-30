@@ -1,10 +1,10 @@
-package com.example.nfsp00f.cardreading
+package com.nf_sp00f.app.cardreading
 
 /** EMV card reading callback interface */
 interface CardReadingCallback {
   fun onProgress(message: String)
-  fun onCardRead(cardData: com.example.nfsp00f.data.EmvCardData)
-  fun onApduExchanged(logEntry: com.example.nfsp00f.data.ApduLogEntry)
+  fun onCardRead(cardData: com.nf_sp00f.app.data.EmvCardData)
+  fun onApduExchanged(logEntry: com.nf_sp00f.app.data.ApduLogEntry)
   fun onError(error: String)
 }
 

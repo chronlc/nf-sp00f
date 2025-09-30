@@ -1,4 +1,4 @@
-package com.example.nfsp00f.data
+package com.nf_sp00f.app.data
 
 /**
  * Production-grade EMV Card Data Model

@@ -1,4 +1,4 @@
-package com.example.nfsp00f.emulation
+package com.nf_sp00f.app.emulation
 
 import android.util.Log
 import java.security.SecureRandom

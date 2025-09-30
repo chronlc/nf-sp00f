@@ -1,4 +1,4 @@
-package com.example.nfsp00f.emulation
+package com.nf_sp00f.app.emulation
 
 /** EMV Attack Emulation Manager Coordinates attack modules and manages emulation profiles */
 class EmvAttackEmulationManager private constructor() {

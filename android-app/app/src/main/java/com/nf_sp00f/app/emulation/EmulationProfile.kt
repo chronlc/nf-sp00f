@@ -1,4 +1,4 @@
-package com.example.nfsp00f.emulation
+package com.nf_sp00f.app.emulation
 
 /** EMV Attack Emulation Profile Interface Defines contract for EMV attack implementations */
 abstract class EmulationProfile(val name: String, val description: String) {

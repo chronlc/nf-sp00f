@@ -1,8 +1,8 @@
-package com.example.nfsp00f.cardreading
+package com.nf_sp00f.app.cardreading
 
 import android.nfc.tech.IsoDep
-import com.example.nfsp00f.data.ApduLogEntry
-import com.example.nfsp00f.data.EmvCardData
+import com.nf_sp00f.app.data.ApduLogEntry
+import com.nf_sp00f.app.data.EmvCardData
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*

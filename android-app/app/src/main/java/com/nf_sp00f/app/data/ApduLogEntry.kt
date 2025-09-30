@@ -1,4 +1,4 @@
-package com.example.nfsp00f.data
+package com.nf_sp00f.app.data
 
 /**
  * APDU Log Entry for real-time EMV transaction logging
