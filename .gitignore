@@ -1,1 +1,22 @@
 emv.html
+
+# Build directories
+build/
+android-app/build/
+android-app/app/build/
+android-app/.gradle/
+
+# Android specific
+*.apk
+*.ap_
+*.dex
+local.properties
+.gradle/
+gradle.properties
+!gradle-wrapper.properties
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+docs/emv.html

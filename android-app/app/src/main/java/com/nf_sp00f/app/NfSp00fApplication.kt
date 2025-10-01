@@ -1,6 +1,7 @@
 package com.nf_sp00f.app
 
 import android.app.Application
+<<<<<<< HEAD
 import android.content.Context
 
 /**
@@ -52,4 +53,12 @@ class NfSp00fApplication : Application() {
   init {
     instance = this
   }
+=======
+
+class NfSp00fApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        // Initialize application-wide components here
+    }
+>>>>>>> 52c0655 (🎯 Complete Priority 1-3: Production-grade CardReadingScreen with EmvWorkflowProcessor)
 }

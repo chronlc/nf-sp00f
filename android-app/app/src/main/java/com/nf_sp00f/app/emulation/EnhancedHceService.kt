@@ -2,6 +2,7 @@ package com.nf_sp00f.app.emulation
 
 import android.nfc.cardemulation.HostApduService
 import android.os.Bundle
+<<<<<<< HEAD
 import android.util.Log
 import com.nf_sp00f.app.data.ApduLogEntry
 import java.util.*
@@ -333,4 +334,18 @@ class EnhancedHceService : HostApduService() {
     val cleanHex = hex.replace(" ", "").uppercase()
     return cleanHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
   }
+=======
+
+class EnhancedHceService : HostApduService() {
+    
+    override fun processCommandApdu(commandApdu: ByteArray?, extras: Bundle?): ByteArray {
+        // EMV HCE processing will be implemented here
+        // For now, return a basic response
+        return byteArrayOf(0x90.toByte(), 0x00.toByte()) // SW_NO_ERROR
+    }
+    
+    override fun onDeactivated(reason: Int) {
+        // Handle HCE deactivation
+    }
+>>>>>>> 52c0655 (🎯 Complete Priority 1-3: Production-grade CardReadingScreen with EmvWorkflowProcessor)
 }

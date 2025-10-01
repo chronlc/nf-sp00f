@@ -1,4 +1,5 @@
 package com.nf_sp00f.app.ui.screens
+<<<<<<< HEAD
 import com.nf_sp00f.app.data.*
 import com.nf_sp00f.app.R
 
@@ -11,11 +12,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+=======
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+>>>>>>> 52c0655 (🎯 Complete Priority 1-3: Production-grade CardReadingScreen with EmvWorkflowProcessor)
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+<<<<<<< HEAD
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -370,4 +377,25 @@ fun emulationScreen() {
                                                                         Modifier.fillMaxWidth()
                                                                                 .padding(32.dp)
         }
+=======
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+@Composable
+fun emulationScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Emulation Screen",
+            color = Color(0xFF4CAF50),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+>>>>>>> 52c0655 (🎯 Complete Priority 1-3: Production-grade CardReadingScreen with EmvWorkflowProcessor)
 }

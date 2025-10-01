@@ -1,5 +1,8 @@
 package com.nf_sp00f.app.ui.screens
+<<<<<<< HEAD
 import com.nf_sp00f.app.data.*
+=======
+>>>>>>> 52c0655 (🎯 Complete Priority 1-3: Production-grade CardReadingScreen with EmvWorkflowProcessor)
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -17,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+<<<<<<< HEAD
 import androidx.compose.ui.unit.dp
 @Composable
 fun dashboardScreen() {
@@ -208,3 +212,272 @@ fun VirtualCardView(card: VirtualCard) {
                                                 color = Color(0xFF4CAF50) // Bold PAN
                                                 card.expiry,
                                                 color = Color(0xFF4a4f54) // Bold expiry in gray
+=======
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
+import com.nf_sp00f.app.R
+import com.nf_sp00f.app.data.VirtualCard
+import com.nf_sp00f.app.data.EmvTestCard
+
+@Composable
+fun dashboardScreen(
+    virtualCards: List<VirtualCard>,
+    onNavigateToRead: () -> Unit,
+    onNavigateToEmulate: () -> Unit,
+    onNavigateToDatabase: () -> Unit,
+    onNavigateToAnalysis: () -> Unit
+) {
+    val allCards = remember(virtualCards) {
+        val testCard = EmvTestCard.getTestCard()
+        if (virtualCards.none { it.pan == testCard.pan }) {
+            listOf(testCard) + virtualCards
+        } else {
+            virtualCards
+        }
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize().padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // System Status Card with proper design specs
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF121717)),
+            shape = RoundedCornerShape(8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                // Background image
+                Image(
+                    painter = painterResource(id = R.drawable.nfspoof_logo),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxWidth().height(200.dp),
+                    alpha = 0.2f
+                )
+
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "NFC PhreaK BoX",
+                        style = MaterialTheme.typography.headlineLarge.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = Color(0xFF4CAF50),
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        "RFiD TooLKiT",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            textDecoration = TextDecoration.Underline
+                        ),
+                        color = Color(0xFFFFFFFF),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        "System Status",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = TextDecoration.Underline
+                        ),
+                        color = Color(0xFF4CAF50),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Status indicators
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        StatusRow("NFC Hardware", "Available", true)
+                        StatusRow("HCE Service", "Ready", true)
+                        StatusRow("Bluetooth", "Not Connected", false)
+                        StatusRow("PN532", "Not Ready", false)
+                    }
+                }
+            }
+        }
+
+        // Stats Cards Row
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            StatsCard(
+                modifier = Modifier.weight(1f),
+                title = "Total Cards",
+                value = allCards.size.toString(),
+                icon = Icons.Default.CreditCard
+            )
+            StatsCard(
+                modifier = Modifier.weight(1f),
+                title = "Active Sessions",
+                value = "1",
+                icon = Icons.Default.Wifi
+            )
+            StatsCard(
+                modifier = Modifier.weight(1f),
+                title = "Success Rate",
+                value = "95%",
+                icon = Icons.Default.CheckCircle
+            )
+        }
+
+        // Recent Cards Section
+        Text(
+            "Recent Cards",
+            style = MaterialTheme.typography.titleLarge,
+            color = Color(0xFF4CAF50)
+        )
+
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(horizontal = 4.dp)
+        ) {
+            items(allCards) { card ->
+                VirtualCardView(card)
+            }
+        }
+    }
+}
+
+@Composable
+fun StatusRow(label: String, status: String, isGood: Boolean) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            label,
+            color = Color(0xFF4CAF50),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Bold
+            )
+        )
+        Text(
+            status,
+            color = if (isGood) Color(0xFF4CAF50) else Color(0xFFcf1b33),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.Bold
+            )
+        )
+    }
+}
+
+@Composable
+fun StatsCard(
+    modifier: Modifier = Modifier,
+    title: String,
+    value: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector
+) {
+    Card(
+        modifier = modifier.height(100.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF121717)),
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(8.dp).fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                icon,
+                contentDescription = null,
+                tint = Color(0xFF4CAF50),
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                value,
+                style = MaterialTheme.typography.headlineSmall,
+                color = Color(0xFFFFFFFF)
+            )
+            Text(
+                title,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF4CAF50),
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+fun VirtualCardView(card: VirtualCard) {
+    Card(
+        modifier = Modifier.width(280.dp).height(160.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = when(card.cardType) {
+                "VISA" -> Color(0xFF1E3A8A)
+                "MC" -> Color(0xFFDC2626)
+                "AMEX" -> Color(0xFF1E40AF)
+                else -> Color(0xFF374151)
+            }
+        ),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp).fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
+            ) {
+                Text(
+                    card.cardType,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = Color.White
+                )
+                Icon(
+                    Icons.Default.Contactless,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Column {
+                Text(
+                    "**** **** **** ${card.pan.takeLast(4)}",
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        card.cardholderName,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White
+                    )
+                    Text(
+                        card.expiry,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White
+                    )
+                }
+            }
+        }
+    }
+}
+>>>>>>> 52c0655 (🎯 Complete Priority 1-3: Production-grade CardReadingScreen with EmvWorkflowProcessor)

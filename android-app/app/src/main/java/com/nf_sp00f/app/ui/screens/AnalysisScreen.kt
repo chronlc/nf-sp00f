@@ -1,4 +1,5 @@
 package com.nf_sp00f.app.ui.screens
+<<<<<<< HEAD
 import com.nf_sp00f.app.data.*
 import com.nf_sp00f.app.R
 
@@ -398,3 +399,33 @@ fun AnalysisResultCard(analysis: AnalysisResult) {
                                         style = MaterialTheme.typography.bodySmall,
                                         analysis.timestamp,
                                         style = MaterialTheme.typography.labelSmall,
+=======
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+@Composable
+fun analysisScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Analysis Screen",
+            color = Color(0xFF4CAF50),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+>>>>>>> 52c0655 (🎯 Complete Priority 1-3: Production-grade CardReadingScreen with EmvWorkflowProcessor)
